@@ -1,72 +1,22 @@
-import { Component } from "react";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import AddUser from "./components/AddUser";
-import Users from "./components/Users";
-export default class MainApp extends Component {
+import React, { Component } from "react";
+import axios from "axios";
+
+const URL = "https://jsonplaceholder.typicode.com/users";
+export default class RestApp extends Component {
   state = {
-    headerValue: "welcome To UserApp CRUD",
-    usersData: [],
+    users: [],
   };
-
   componentDidMount() {
-    const json= localStorage.getItem('tata')
-    const usersData= JSON.parse(json)
-    if(usersData){
-      this.setState(()=>{
-        return{
-          usersData
-        }
-      })
-    }
+    axios
+      .get(URL)
+      .then((res) => res.data)
+      .then((data) => {
+        this.setState({ users: data });
+      });
   }
-  componentDidUpdate() {
-   const json= JSON.stringify(this.state.usersData)
-   localStorage.setItem('tata',json)
-  }
-  deleteOne = (data) => {
-    this.setState((prevState) => {
-      return {
-        usersData: prevState.usersData.filter((option) => data !== option),
-      };
-    });
-  };
-  deleteAll = () => {
-    this.setState(() => {
-      return {
-        usersData: [],
-      };
-    });
-  };
-  addUser = (data) => {
-    this.setState((prevState) => {
-      console.log(data);
-
-      return {
-        usersData: prevState.usersData.concat(data),
-      };
-    });
-  };
   render() {
-    return (
-      <div className="container">
-        <div className="card text-center">
-          <div className="card-header">
-            <Header headerData={this.state.headerValue} />
-          </div>
-          <div className="card-body">
-            <p>Welcome to MainApp</p>
-            <AddUser au={this.addUser} />
-            <Users udata={this.state.usersData} delete={this.deleteOne} />
-          </div>
-          <div className="card-footer text-body-secondary">
-            <Footer
-              delete={this.deleteAll}
-              hasData={this.state.usersData.length > 0}
-            />
-          </div>
-        </div>
-      </div>
-    );
+    return <div>{this.state.users.map((data)=>(
+        <div>{data.name}-----{data.email}</div>
+    ))}</div>;
   }
 }
