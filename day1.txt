@@ -1,0 +1,27 @@
+import { Component } from "react";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import AddUser from "./components/AddUser";
+import Users from "./components/Users";
+export default class MainApp extends Component {
+  render() {
+    const headerValue = "welcome To UserApp CRUD";
+    return (
+      <div className="container">
+        <div className="card text-center">
+          <div className="card-header">
+            <Header headerData={headerValue} />
+          </div>
+          <div className="card-body">
+            <p>Welcome to MainApp</p>
+            <AddUser />
+            <Users />
+          </div>
+          <div className="card-footer text-body-secondary">
+            <Footer />
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
