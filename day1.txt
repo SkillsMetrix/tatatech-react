@@ -9,6 +9,20 @@ export default class MainApp extends Component {
     usersData: [],
   };
 
+  deleteOne = (data) => {
+    this.setState((prevState) => {
+      return {
+        usersData: prevState.usersData.filter((option) => data !== option),
+      };
+    });
+  };
+  deleteAll = () => {
+    this.setState(() => {
+      return {
+        usersData: [],
+      };
+    });
+  };
   addUser = (data) => {
     this.setState((prevState) => {
       console.log(data);
@@ -28,17 +42,22 @@ export default class MainApp extends Component {
           <div className="card-body">
             <p>Welcome to MainApp</p>
             <AddUser au={this.addUser} />
-            <Users udata={this.state.usersData} />
+            <Users udata={this.state.usersData} delete={this.deleteOne} />
           </div>
           <div className="card-footer text-body-secondary">
-            <Footer />
+            <Footer
+              delete={this.deleteAll}
+              hasData={this.state.usersData.length > 0}
+            />
           </div>
         </div>
       </div>
     );
   }
 }
--------------
+
+
+------------
 
 
 import { Component } from 'react'
@@ -49,7 +68,7 @@ export default class Users extends Component{
         return(
             <div>
               {
-                this.props.udata.map((data) =>  <User key={data} ud={data}/>)
+                this.props.udata.map((data) =>  <User key={data} ud={data} deleteUser={this.props.delete}/>)
               }
                
             </div>
@@ -58,26 +77,19 @@ export default class Users extends Component{
 }
 
 -----------
-import { Component } from "react";
-export default class AddUser extends Component {
-  addUser = (e) => {
-    e.preventDefault();
-    const data=e.target.elements.uname.value
-    this.props.au(data)
-  
-  };
 
+import { Component } from "react";
+export default class User extends Component {
   render() {
     return (
       <div>
-        <p>AddUser</p>
-        <form onSubmit={this.addUser}>
-        <input type="text" name="uname" />
-        <button className="btn btn-primary">
-          Add USer
+        {this.props.ud} &nbsp;
+        <button
+          onClick={() => this.props.deleteUser(this.props.ud)}
+          className="btn btn-warning"
+        >
+          Delete
         </button>
-        </form>
-       
       </div>
     );
   }
