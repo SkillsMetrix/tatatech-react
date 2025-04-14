@@ -4,23 +4,80 @@ import Footer from "./components/Footer";
 import AddUser from "./components/AddUser";
 import Users from "./components/Users";
 export default class MainApp extends Component {
+  state = {
+    headerValue: "welcome To UserApp CRUD",
+    usersData: [],
+  };
+
+  addUser = (data) => {
+    this.setState((prevState) => {
+      console.log(data);
+
+      return {
+        usersData: prevState.usersData.concat(data),
+      };
+    });
+  };
   render() {
-    const headerValue = "welcome To UserApp CRUD";
     return (
       <div className="container">
         <div className="card text-center">
           <div className="card-header">
-            <Header headerData={headerValue} />
+            <Header headerData={this.state.headerValue} />
           </div>
           <div className="card-body">
             <p>Welcome to MainApp</p>
-            <AddUser />
-            <Users />
+            <AddUser au={this.addUser} />
+            <Users udata={this.state.usersData} />
           </div>
           <div className="card-footer text-body-secondary">
             <Footer />
           </div>
         </div>
+      </div>
+    );
+  }
+}
+-------------
+
+
+import { Component } from 'react'
+import User from './User'
+export default class Users extends Component{
+
+    render(){
+        return(
+            <div>
+              {
+                this.props.udata.map((data) =>  <User key={data} ud={data}/>)
+              }
+               
+            </div>
+        )
+    }
+}
+
+-----------
+import { Component } from "react";
+export default class AddUser extends Component {
+  addUser = (e) => {
+    e.preventDefault();
+    const data=e.target.elements.uname.value
+    this.props.au(data)
+  
+  };
+
+  render() {
+    return (
+      <div>
+        <p>AddUser</p>
+        <form onSubmit={this.addUser}>
+        <input type="text" name="uname" />
+        <button className="btn btn-primary">
+          Add USer
+        </button>
+        </form>
+       
       </div>
     );
   }
