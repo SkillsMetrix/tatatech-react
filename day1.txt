@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link } from 'react-router-dom'
 function NavBar(props) {
   return (
     <div>
@@ -7,22 +7,22 @@ function NavBar(props) {
         <ul className="nav">
           <li className="nav-item">
             <a className="nav-link" href="#">
-              Login
+             <Link to="/login">Login</Link> 
             </a>
           </li>
           <li className="nav-item">
             <a className="nav-link" href="#">
-              Register
+            <Link to="/register">Register</Link> 
             </a>
           </li>
           <li className="nav-item">
             <a className="nav-link" href="#">
-              UserDetails
+            <Link to="/userdetails">UserDetails</Link>     
             </a>
           </li>
           <li className="nav-item">
             <a className="nav-link" href="#">
-              Portfolio
+            <Link to="/portfolio">Portfolio</Link>     
             </a>
           </li>
         </ul>
