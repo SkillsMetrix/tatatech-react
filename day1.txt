@@ -1,21 +1,50 @@
+const counterReducer = (state = 101, action) => {
+  switch (action.type) {
+    case "INCREMENT":
+      return state + 1;
+      case "DECREMENT":
+        return state - 1;
+
+    default:
+      return state;
+  }
+};
+export default counterReducer;
+
+
+----------
+
+
+export const inc=()=>{
+    return {
+        type: 'INCREMENT'
+    }
+}
+
+export const dec=()=>{
+    return {
+        type: 'DECREMENT'
+    }
+}
+
+------
 import React from "react";
-import ReactDOM from "react-dom/client";
-import "./index.css";
-import App from "./App";
-import reportWebVitals from "./reportWebVitals";
-import { Provider } from "react-redux";
-import { createStore } from "redux";
-import rootReducer from "./redux/reducers";
-//create a store
-const appStore = createStore(rootReducer);
+import { useDispatch, useSelector } from "react-redux";
+import {} from "redux";
+import { inc } from "../redux/actions/counterAction";
+function CounterApp(props) {
+  // consuming state from  store
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <Provider store={appStore}>
-   
-    <App />
-    
-  </Provider>
-);
+  const data = useSelector((state) => state.appCounter);
+  const dispatch= useDispatch()
 
-reportWebVitals();
+  return (
+    <div>
+      <p>the counter is: {data}</p>
+      <hr/>
+      <button onClick={()=> dispatch(inc())}>INC</button>
+    </div>
+  );
+}
+
+export default CounterApp;
