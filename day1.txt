@@ -1,88 +1,66 @@
-import React from "react";
-import { Link } from 'react-router-dom'
-function NavBar(props) {
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+function Register(props) {
+  const navigate = useNavigate();
+  const [users, setUsers] = useState([]);
+  const handleChange = (e) => {
+    setUsers({ ...users, [e.target.name]: e.target.value });
+  };
+  const addUser = (e) => {
+    e.preventDefault();
+
+    localStorage.setItem("udata", JSON.stringify(users));
+    alert("User Registerd");
+    navigate("/login");
+  };
   return (
     <div>
-      <div className="container">
-        <ul className="nav">
-          <li className="nav-item">
-            <a className="nav-link" href="#">
-             <Link to="/login">Login</Link> 
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="#">
-            <Link to="/register">Register</Link> 
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="#">
-            <Link to="/userdetails">UserDetails</Link>     
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="#">
-            <Link to="/portfolio">Portfolio</Link>     
-            </a>
-          </li>
-        </ul>
-      </div>
+      <form onSubmit={addUser}>
+        UserName:
+        <input type="text" name="uname" onChange={handleChange} />
+        Password:
+        <input type="password" name="password" onChange={handleChange} />
+        <button>Add User</button>
+        <br />
+      </form>
     </div>
   );
 }
 
-export default NavBar;
+export default Register;
+-------------
 
 
--------
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import Login from "./components/Login";
-
-
-
-
-export const routes=[
-    {path:'/login',element:<Login/>}
-]
-
-
-----------------
-
-
-
-import React from 'react';
-import { useRoutes } from 'react-router-dom'
-import { routes } from '../routes';
-function LandingPage(props) {
-    const element= useRoutes(routes)
-    return (
-        <div>
-            <p>Landing Page</p>
-            {element}
-        </div>
-    );
+function Login(props) {
+  const navigate = useNavigate();
+  const [users, setUsers] = useState([]);
+  const handleChange = (e) => {
+    setUsers({ ...users, [e.target.name]: e.target.value });
+  };
+  const login = (e) => {
+    e.preventDefault();
+    let validate = JSON.parse(localStorage.getItem("udata"));
+    if (validate.uname == users.uname && validate.password == users.password) {
+      navigate("/userdetails");
+    }else{
+        alert('Incorrect Credentials')
+    }
+  };
+  return (
+    <div>
+      <form onSubmit={login}>
+        UserName:
+        <input type="text" name="uname" onChange={handleChange} />
+        Password:
+        <input type="password" name="password" onChange={handleChange} />
+        <button>Add User</button>
+        <br />
+      </form>
+    </div>
+  );
 }
 
-export default LandingPage;
-
-
-
-----------
-
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { BrowserRouter } from 'react-router-dom'
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
-);
-
- 
-reportWebVitals();
-
+export default Login;
