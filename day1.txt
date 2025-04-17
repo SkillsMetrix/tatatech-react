@@ -1,9 +1,41 @@
+import React, { useEffect } from "react";
+import ProductComponent from "./ProductComponent";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setProducts } from "../redux/actions/productActions";
+const URL = "https://fakestoreapi.com/products";
+function ProductListing(props) {
+  const prods = useSelector((state) => state);
+  // invoke dispatch
+  const dispatch = useDispatch();
+  const fetchProducts = async () => {
+    const response = await axios.get(URL);
+
+    dispatch(setProducts(response.data));
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+  console.log(prods);
+
+  return (
+    <div className="ui grid container">
+      <ProductComponent />
+    </div>
+  );
+}
+
+export default ProductListing;
+-----
+
+
 import React from "react";
 import { useSelector } from "react-redux";
 function ProductComponent(props) {
   const appproducts = useSelector((state) => state.allProducts.products);
 
-  const { id, productName, Category } = appproducts[0];
+  const { id, productName, Category } = appproducts;
 
   return (
     <div className="four wide column">
@@ -11,7 +43,7 @@ function ProductComponent(props) {
         <div className="card">
           <div className="image"></div>
           <div className="content">
-            <div className="header">{productName}</div>
+            <div className="header"></div>
           </div>
         </div>
       </div>
@@ -20,17 +52,34 @@ function ProductComponent(props) {
 }
 
 export default ProductComponent;
-------------
 
-import React from 'react';
-import ProductComponent from './ProductComponent';
 
-function ProductListing(props) {
-    return (
-        <div className='ui grid container'>
-           <ProductComponent/>
-        </div>
-    );
+---------
+
+
+import { ActionTypes } from "../constants/action-types"
+
+export const setProducts=(products)=>{
+    return{
+        type: ActionTypes.SET_PRODUCTS,
+        payload:products
+    }
 }
 
-export default ProductListing;
+
+-----
+
+import { ActionTypes } from "./constants/action-types";
+
+const initialState = {
+  products: [],
+};
+
+export const productReducer = (state = initialState, { type, payload }) => {
+  switch (type) {
+    case ActionTypes.SET_PRODUCTS:
+      return {...state,products:payload};
+    default:
+      return state;
+  }
+};
