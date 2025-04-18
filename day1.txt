@@ -1,57 +1,25 @@
-import React, { useEffect } from "react";
-import ProductComponent from "./ProductComponent";
-import { useDispatch, useSelector } from "react-redux";
-import { setProducts } from "../redux/actions/productActions";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-function ProductListing(props) {
-  const prods = useSelector((state) => state);
+import axios from "axios";
 
-  const dispatch = useDispatch();
+const URL = "https://jsonplaceholder.typicode.com/users";
 
-  useEffect(() => {
-    dispatch(setProducts());
-  }, []);
-  console.log(prods);
-
-  return (
-    <div className="ui grid container">
-      <ProductComponent />
-    </div>
-  );
-}
-
-export default ProductListing;
-
-----------
-
-import fakeStoreApi from "../../apis/fakeStoreApi";
-import { ActionTypes } from "../constants/action-types";
-
-
-export const setProducts = () => async (dispatch) => {
-  const response = await fakeStoreApi.get("/products");
-  dispatch({ type: ActionTypes.SET_PRODUCTS, payload: response.data });
-};
-
-export const selectedProduct = (product) => {
-  return {
-    type: ActionTypes.SELECTED_PRODUCT,
-    payload: product,
-  };
-};
-
-
-
-----------
-
-import { applyMiddleware, compose, createStore } from "redux";
-import rootReducer from "./reducers";
-import { thunk } from "redux-thunk";
-
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(
-  rootReducer,
-  composeEnhancers(applyMiddleware(thunk))
-);
-
-export default store;
+export const fetchUsers = createAsyncThunk("posts/fetchposts", async () => {
+  const response = await axios.get(URL);
+  return response.data;
+});
+const restAppSlice = createSlice({
+  name: "users",
+  initialState: {
+    users: [],
+  },
+  // its for sync calls
+  reducers: {},
+  // its for async calls
+  extraReducers(builder) {
+    builder.addCase(fetchUsers.fulfilled, (state, action) => {
+      state.users = action.payload;
+    });
+  },
+});
+export default restAppSlice.reducer;
