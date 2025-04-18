@@ -1,32 +1,63 @@
-import { useEffect, useState } from "react";
+import React, { useState } from 'react';
 
-const CustomRest = (url) => {
-  const [data, setData] = useState([]);
-  useEffect(() => {
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => setData(data));
-  }, [url]);
-  return [data];
-};
-export default CustomRest;
----
+const RegistrationForm = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+  });
 
+  const [submitted, setSubmitted] = useState(false);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (formData.name && formData.email && formData.password) {
+      setSubmitted(true);
+    }
+  };
 
-import React from 'react';
-import CustomRest from './customRest';
-
-function CustomHook(props) {
-    const [data]= CustomRest('https://jsonplaceholder.typicode.com/users')
-    return (
+  return (
+    <div>
+      <h2>Register</h2>
+      {submitted && <div role="alert">Registration successful!</div>}
+      <form onSubmit={handleSubmit}>
         <div>
-             {data.map((item) => (
-        <div>{item.name}</div>
-      ))}
+          <label>Name:</label>
+          <input
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Enter your name"
+          />
         </div>
-    );
-}
+        <div>
+          <label>Email:</label>
+          <input
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Enter your email"
+          />
+        </div>
+        <div>
+          <label>Password:</label>
+          <input
+            name="password"
+            type="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="Enter password"
+          />
+        </div>
+        <button type="submit">Register</button>
+      </form>
+    </div>
+  );
+};
 
-export default CustomHook;
+export default RegistrationForm;
