@@ -1,63 +1,35 @@
-import React, { useState } from 'react';
-
-const RegistrationForm = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
+import React from "react";
+import { fireEvent, render, screen } from "@testing-library/react";
+import RegistrationForm from "./RegistrationForm";
+// testsuite
+describe("RegitrationForm test", () => {
+  it("test for rendering the content", () => {
+    render(<RegistrationForm />);
+    expect(screen.getByPlaceholderText("Enter your name")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Enter your email")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Enter password")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /register/i })
+    ).toBeInTheDocument();
   });
-
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (formData.name && formData.email && formData.password) {
-      setSubmitted(true);
-    }
-  };
-
-  return (
-    <div>
-      <h2>Register</h2>
-      {submitted && <div role="alert">Registration successful!</div>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Name:</label>
-          <input
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Enter your name"
-          />
-        </div>
-        <div>
-          <label>Email:</label>
-          <input
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Enter your email"
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            name="password"
-            type="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Enter password"
-          />
-        </div>
-        <button type="submit">Register</button>
-      </form>
-    </div>
-  );
-};
-
-export default RegistrationForm;
+  it("check the success message", () => {
+    render(<RegistrationForm />);
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+  it("show success message on submit", () => {
+    render(<RegistrationForm />);
+    fireEvent.change(screen.getByPlaceholderText("Enter your name"), {
+      target: { value: "Amarjeet" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("Enter your email"), {
+      target: { value: "Amarjeet@mail.com" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("Enter password"), {
+      target: { value: "amar321" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /register/i }));
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Registration successful!"
+    );
+  });
+});
